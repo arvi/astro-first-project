@@ -4,6 +4,7 @@ import Main from '../../components/Main.astro';
 import Layout from '../../layouts/Layout.astro';
 import H1 from '../../components/H1.astro';
 import { Image } from "astro:assets";
+import TableOfContents from '../../components/TableOfContents.astro';
 
 export const getStaticPaths = async () => {
   const posts = await getCollection('posts');
@@ -38,6 +39,9 @@ const { Content, headings } = await post.render();
     <a href="/blog" class="text-zinc-500 text-2xl mb-16 underline block">← Back to all blogs</a>
     <H1 text={post.data.title}></H1>
     <Image src={post.data.image} alt={post.data.title} class="rounded-2xl shadow-xl mb-28 aspect-thumbnail object-cover" />
-    <div class="prose prose-2xl overflow-visible relative"><Content /></div>
+    <div class="relative flex gap-x-12">
+      <div class="prose prose-2xl overflow-visible relative"><Content /></div>
+      <TableOfContents headings={headings} />
+    </div>
   </Main>
 </Layout>
