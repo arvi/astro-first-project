@@ -1,0 +1,45 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Main from '../../components/Main.astro';
+import Layout from '../../layouts/Layout.astro';
+import H1 from '../../components/H1.astro';
+import { Image } from "astro:assets";
+import TableOfContents from '../../components/TableOfContents.astro';
+import Share from '../../components/Share.astro';
+import type { GetStaticPathsOptions, Page } from 'astro';
+import PostList from '../../components/PostList.astro';
+import Pagination from '../../components/Pagination.astro';
+
+export const getStaticPaths = async ({ paginate }: GetStaticPathsOptions) => {
+  const allPosts = await getCollection('posts');
+
+  // generate pages from our array of posts based on page size
+  return paginate(allPosts, { pageSize: 6 });
+}
+
+type Props = {
+  page: Page
+};
+
+// all paginated data is passed on the "page" prop
+const { page } = Astro.props;
+
+// posts at this stage have been broken down based on page size
+const posts = page.data as CollectionEntry<'posts'>[];
+---
+
+<Layout title="Blog - Astro Nation">
+  <Main>
+    <H1 text="Astro Nation Blog" />
+    <p class="text-zinc-900 text-2xl mb-24 max-sm:mb-14">
+      Join the community and learn from developers and enthusiasts.
+    </p>
+    <div class="mb-12">
+      <Pagination prevURL={page.url.prev} nextURL={page.url.next} />
+    </div>
+    <PostList posts={posts} />
+    <div class="mb-12">
+      <Pagination prevURL={page.url.prev} nextURL={page.url.next} />
+    </div>
+  </Main>
+</Layout>
