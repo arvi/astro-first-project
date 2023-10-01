@@ -1,5 +1,10 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Main from '../../components/Main.astro';
+import Layout from '../../layouts/Layout.astro';
+import H1 from '../../components/H1.astro';
+import { Image } from "astro:assets";
+
 export const getStaticPaths = async () => {
   const posts = await getCollection('posts');
 
@@ -19,9 +24,20 @@ export const getStaticPaths = async () => {
 
 type Props = {
   post: CollectionEntry<'posts'>
-}
+};
 
-const { post } = Astro.props
+const { post } = Astro.props;
+
+// get the rendered markdown version of the raw markdown returned
+// it will have the content (which is an actual component) of the markdown and the headings that for displaying in sidebar navigation to jump through the article
+const { Content, headings } = await post.render();
 ---
 
-{ post.data.title}
+<Layout title={post.data.title}>
+  <Main>
+    <a href="/blog" class="text-zinc-500 text-2xl mb-16 underline block">← Back to all blogs</a>
+    <H1 text={post.data.title}></H1>
+    <Image src={post.data.image} alt={post.data.title} class="rounded-2xl shadow-xl mb-28 aspect-thumbnail object-cover" />
+    <Content />
+  </Main>
+</Layout>
