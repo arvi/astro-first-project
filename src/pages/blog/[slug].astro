@@ -38,6 +38,6 @@ const { Content, headings } = await post.render();
     <a href="/blog" class="text-zinc-500 text-2xl mb-16 underline block">← Back to all blogs</a>
     <H1 text={post.data.title}></H1>
     <Image src={post.data.image} alt={post.data.title} class="rounded-2xl shadow-xl mb-28 aspect-thumbnail object-cover" />
-    <Content />
+    <div class="prose prose-2xl overflow-visible relative"><Content /></div>
   </Main>
 </Layout>
